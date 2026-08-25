@@ -1,0 +1,62 @@
+name: CI
+
+# Builds the whole development from source against the pinned Mathlib revision and
+# checks that `InverseGenerator.theorem_finite` — Theorem 1.1 of arXiv:2608.06272v2 —
+# really is proved:
+#
+#   * `lake build --wfail` turns Lean's "declaration uses 'sorry'" warning (and every
+#     other warning, including the Mathlib style linters) into a build failure;
+#   * `leanchecker` replays the whole compiled environment through an independent
+#     kernel, so the result does not rest on the elaborator being correct;
+#   * `axiom-audit` fails if anything in the `InverseGenerator` namespace depends on
+#     an axiom outside `propext`, `Classical.choice`, `Quot.sound` — `sorryAx`
+#     included.
+#
+# The pinned `lean-toolchain` and `lake-manifest.json` are the point of this
+# repository: the proof must stay reproducible, so nothing here auto-upgrades.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build and verify Theorem 1.1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v5
+
+      - name: Build, re-check with the kernel, and audit the axioms
+        uses: leanprover/lean-action@v1
+        with:
+          build-args: "--wfail"
+          use-mathlib-cache: "true"
+          leanchecker: "true"
+          axiom-audit: "true"
+          axiom-audit-root: "InverseGenerator"
+          axiom-audit-allow: "propext,Classical.choice,Quot.sound"
+
+      # `TheoremFinite.lean` ends with a `#guard_msgs`-protected `#print axioms`, so
+      # the step above already fails if the axiom set of `theorem_finite` changes.
+      # This step re-runs it standalone so the axiom list is visible in the CI log
+      # without reading through the build output.
+      - name: Report the axioms of `theorem_finite`
+        run: |
+          cat > axiom_check.lean <<'EOF'
+          import InverseGenerator.TheoremFinite
+          #print axioms InverseGenerator.theorem_finite
+          EOF
+          lake env lean axiom_check.lean | tee axioms.txt
+          grep -qxF \
+            "'InverseGenerator.theorem_finite' depends on axioms: [propext, Classical.choice, Quot.sound]" \
+            axioms.txt

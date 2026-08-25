@@ -1,0 +1,8 @@
+# Lake build artefacts and the vendored dependency sources.
+/.lake/
+
+# Editor and OS noise.
+*.olean
+*.ilean
+*.trace
+.DS_Store

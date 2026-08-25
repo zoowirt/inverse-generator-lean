@@ -1,0 +1,50 @@
+cff-version: 1.2.0
+title: >-
+  A Lean 4 formalization of Theorem 1.1 of "A solution to the
+  inverse generator problem and related questions"
+message: >-
+  If you use this formalization, please cite both the software
+  and the accompanying paper.
+type: software
+authors:
+  - given-names: Emiel
+    family-names: Lorist
+  - given-names: Martin
+    family-names: Meyries
+  - given-names: Mark
+    family-names: Veraar
+abstract: >-
+  A self-contained, machine-checked Lean 4 / Mathlib proof of
+  Theorem 1.1 of arXiv:2608.06272v2: for every alpha in (0,1) the
+  explicit 2n x 2n matrices A_n built from fractional Toeplitz
+  matrices and a doubly exponential eigenvalue sequence generate
+  exponentially stable semigroups whose inverse generators have
+  norm growth of order n^alpha, with the absolute constant C = 50.
+keywords:
+  - Lean 4
+  - Mathlib
+  - formalization
+  - inverse generator problem
+  - C0-semigroup
+  - Schauder basis
+  - Toeplitz matrix
+license: Apache-2.0
+repository-code: 'https://github.com/zoowirt/inverse-generator-lean'
+preferred-citation:
+  type: article
+  title: >-
+    A solution to the inverse generator problem and related
+    questions
+  authors:
+    - given-names: Emiel
+      family-names: Lorist
+    - given-names: Martin
+      family-names: Meyries
+    - given-names: Mark
+      family-names: Veraar
+  year: 2026
+  journal: arXiv preprint
+  identifiers:
+    - type: other
+      value: 'arXiv:2608.06272'
+  url: 'https://arxiv.org/abs/2608.06272'

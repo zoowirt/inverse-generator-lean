@@ -1,0 +1,19 @@
+name = "InverseGenerator"
+version = "1.0.0"
+keywords = ["math", "semigroup", "inverse-generator", "schauder-basis", "toeplitz"]
+description = "A Lean 4 formalization of Theorem 1.1 of arXiv:2608.06272 (Lorist-Meyries-Veraar)"
+defaultTargets = ["InverseGenerator"]
+
+[leanOptions]
+pp.unicode.fun = true # pretty-prints `fun a ↦ b`
+relaxedAutoImplicit = false
+weak.linter.mathlibStandardSet = true
+maxSynthPendingDepth = 3
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.33.0-rc1"
+
+[[lean_lib]]
+name = "InverseGenerator"
